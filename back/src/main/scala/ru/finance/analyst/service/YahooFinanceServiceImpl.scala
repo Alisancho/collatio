@@ -6,20 +6,17 @@ import akka.http.scaladsl.model.{HttpHeader, HttpMethod, HttpRequest, HttpRespon
 import akka.http.scaladsl.model.Uri.{Path, Query}
 import scala.concurrent.Future
 
-object YahooFinanceService{
-  val STATISTIC:Path = Path("/stock/v2/get-statistics")
-  val SUMMARY:Path = Path("/stock/v2/get-summary")
-}
-
-
 case class YahooFinanceConfig(
                                uriHost: Uri,
                                xRapidapiHost: String,
                                token: String
                              )
 
-class YahooFinanceServiceImpl(config: YahooFinanceConfig)(f: HttpRequest => Future[HttpResponse]) {
-  
+object YahooFinanceService:
+  val STATISTIC:Path = Path("/stock/v2/get-statistics")
+  val SUMMARY:Path = Path("/stock/v2/get-summary")
+
+class YahooFinanceServiceImpl(config: YahooFinanceConfig)(f: HttpRequest => Future[HttpResponse]):
   import YahooFinanceService._
 
   def getInfo(symbol: String, region: String = "US", path:Path): Future[HttpResponse] = {
@@ -32,4 +29,3 @@ class YahooFinanceServiceImpl(config: YahooFinanceConfig)(f: HttpRequest => Futu
 
     f(HttpRequest(uri = newUri, headers = headers))
   }
-}

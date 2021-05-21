@@ -28,7 +28,7 @@ class HttpController(yahooFinanceServiceImpl: YahooFinanceServiceImpl)
         entity(as[HttpRequest]) { httpRequest =>
           complete(
             yahooFinanceServiceImpl
-              .getInfo("AAPL", "US",STATISTIC)
+              .getInfo("AAPL", "US", STATISTIC)
               .flatMap(_.entity.toStrict(3.second))
               .map(_.data.utf8String)
               .map(JsonParser(_).convertTo[YahooStatisticsResponse])

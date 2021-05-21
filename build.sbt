@@ -27,8 +27,12 @@ lazy val back = (project in file("back")).
       ("com.typesafe.akka" %% "akka-stream" % AkkaVersion).withDottyCompat(scalaVersion.value),
       ("com.typesafe.akka" %% "akka-http" % "10.2.4").withDottyCompat(scalaVersion.value),
       ( "com.typesafe.akka" %% "akka-http-spray-json" % "10.2.4").withDottyCompat(scalaVersion.value),
+      ("com.lightbend.akka" %% "akka-stream-alpakka-elasticsearch" % "3.0.0").withDottyCompat(scalaVersion.value),
       ("org.telegram" % "telegrambots" % "4.7"),
       ("org.jetbrains" % "annotations" % "19.0.0"),
+      ("io.getquill" %% "quill-core" % "3.7.1").withDottyCompat(scalaVersion.value),
+      ("org.xerial" % "sqlite-jdbc" % "3.34.0"),
+      ("io.getquill" %% "quill-jdbc-monix" % "3.7.1").withDottyCompat(scalaVersion.value),
     ),
   )
 //lazy val front = (project in file("front")).
