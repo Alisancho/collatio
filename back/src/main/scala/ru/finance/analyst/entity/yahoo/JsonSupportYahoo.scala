@@ -1,7 +1,6 @@
-package ru.finance.analyst.entity
+package ru.finance.analyst.entity.yahoo
 
-import spray.json.DefaultJsonProtocol
-import akka.http.scaladsl.server.Directives
+import ru.finance.analyst.entity.yahoo._
 
 trait JsonSupportYahoo:
   import spray.json._

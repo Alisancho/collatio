@@ -8,11 +8,12 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
+
 import java.util.Objects
 
-class InvestInfoBot(token: String, 
-                    name: String,
-                    chat_id: Long) extends TelegramLongPollingBot {
+class TelegramServiceImpl(token: String, 
+                          name: String, 
+                          chat_id: Long)(buisnessTaskServiceImpl:BuisnessTaskServiceImpl) extends TelegramLongPollingBot {
 
 //  val replyKeyboardMarkup = new ReplyKeyboardMarkup()
 //    .setSelective(true)

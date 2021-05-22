@@ -8,21 +8,22 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
-import monix.execution.schedulers.SchedulerService
 import ru.finance.analyst.service.YahooFinanceServiceImpl
-import ru.finance.analyst.entity.{JsonSupportYahoo, YahooStatisticsResponse, YahooSummaryResponse}
+import ru.finance.analyst.entity.yahoo.YahooSummaryResponse
+import ru.finance.analyst.entity.yahoo.{JsonSupportYahoo, YahooStatisticsResponse, YahooSummaryResponse}
 import spray.json.JsonParser
 import spray.json._
+
 import scala.concurrent.duration._
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.Random
 import scala.io.StdIn
 import ru.finance.analyst.service.YahooFinanceService._
 
 
 class HttpController(yahooFinanceServiceImpl: YahooFinanceServiceImpl)
-                    (using ex:SchedulerService, materializer: Materializer) extends JsonSupportYahoo {
-  def getRout: Route = pathPrefix("api" / "v1") {
+                    (using ex:ExecutionContextExecutor, materializer: Materializer) extends JsonSupportYahoo {
+  def getRout(): Route = pathPrefix("api" / "v1") {
     path("statistics") {
       get {
         entity(as[HttpRequest]) { httpRequest =>

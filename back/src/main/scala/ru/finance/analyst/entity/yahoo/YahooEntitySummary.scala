@@ -1,5 +1,6 @@
-package ru.finance.analyst.entity
+package ru.finance.analyst.entity.yahoo
 
+import ru.finance.analyst.entity.yahoo.{Price, SharesOutstanding}
 
 case class YahooSummaryResponse(
 //                                    defaultKeyStatistics: DefaultKeyStatistics,

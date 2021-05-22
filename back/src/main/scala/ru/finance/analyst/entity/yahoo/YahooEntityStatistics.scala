@@ -1,6 +1,7 @@
-package ru.finance.analyst.entity
+package ru.finance.analyst.entity.yahoo
 
 import akka.http.scaladsl.server.Directives
+import ru.finance.analyst.entity.yahoo.{Amrn, DefaultKeyStatistics, SharesOutstanding, SummaryDetail}
 
 case class YahooStatisticsResponse(
                                     defaultKeyStatistics: DefaultKeyStatistics,
