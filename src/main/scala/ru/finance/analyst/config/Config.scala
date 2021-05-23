@@ -1,10 +1,10 @@
 package ru.finance.analyst.config
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 
 object Config {
 
-  val config = ConfigFactory.load()
+  val config: Config = ConfigFactory.load()
 
   object ServerConfig   {
     val host: String = config.getString("server.host")

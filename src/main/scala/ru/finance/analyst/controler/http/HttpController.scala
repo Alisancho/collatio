@@ -9,15 +9,14 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
 import ru.finance.analyst.service.YahooFinanceServiceImpl
-import ru.finance.analyst.entity.yahoo.YahooSummaryResponse
-import ru.finance.analyst.entity.yahoo.{JsonSupportYahoo, YahooStatisticsResponse, YahooSummaryResponse}
+import ru.finance.analyst.entity.yahoo.statistic.YahooStatisticsResponse
+import ru.finance.analyst.entity.yahoo.summary.YahooSummaryResponse
+import ru.finance.analyst.entity.yahoo.JsonSupportYahoo
 import spray.json.JsonParser
 import spray.json._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContextExecutor, Future}
-import scala.util.Random
-import scala.io.StdIn
 import ru.finance.analyst.service.YahooFinanceService._
 
 
@@ -30,7 +29,7 @@ class HttpController(yahooFinanceServiceImpl: YahooFinanceServiceImpl)
           complete(
             yahooFinanceServiceImpl
               .getInfo("AAPL", "US", STATISTIC)
-              .flatMap(_.entity.toStrict(3.second))
+              .flatMap(_.entity.toStrict(5.second))
               .map(_.data.utf8String)
               .map(JsonParser(_).convertTo[YahooStatisticsResponse])
               .map(_.toJson.toString)
@@ -44,7 +43,7 @@ class HttpController(yahooFinanceServiceImpl: YahooFinanceServiceImpl)
             complete(
               yahooFinanceServiceImpl
                 .getInfo("^GSPC", "US", SUMMARY)
-                .flatMap(_.entity.toStrict(3.second))
+                .flatMap(_.entity.toStrict(5.second))
                 .map(_.data.utf8String)
                 .map(JsonParser(_).convertTo[YahooSummaryResponse])
                 .map(_.toJson.toString)

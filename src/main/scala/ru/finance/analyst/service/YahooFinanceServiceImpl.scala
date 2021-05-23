@@ -3,21 +3,24 @@ package ru.finance.analyst.service
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{HttpHeader, HttpMethod, HttpRequest, HttpResponse, Uri}
 import akka.http.scaladsl.model.Uri.{Path, Query}
+import com.typesafe.scalalogging.LazyLogging
+
 import scala.concurrent.Future
 
 case class YahooFinanceConfig(
     uriHost: Uri,
     xRapidapiHost: String,
-    token: String
+    token: String,
+    f: HttpRequest => Future[HttpResponse]
 )
 
-object YahooFinanceService                                                                        {
+object YahooFinanceService {
   val STATISTIC: Path = Path("/stock/v2/get-statistics")
   val SUMMARY: Path   = Path("/stock/v2/get-summary")
 }
 
-class YahooFinanceServiceImpl(config: YahooFinanceConfig)(f: HttpRequest => Future[HttpResponse]) {
-  import YahooFinanceService._
+class YahooFinanceServiceImpl(config: YahooFinanceConfig) extends  LazyLogging{
+  logger.info("START_YahooFinanceServiceImpl")
 
   def getInfo(symbol: String, region: String = "US", path: Path): Future[HttpResponse] = {
     val header1 = RawHeader("x-rapidapi-key", config.token)
@@ -27,6 +30,6 @@ class YahooFinanceServiceImpl(config: YahooFinanceConfig)(f: HttpRequest => Futu
     val query  = Query(Map("symbol" -> symbol, "region" -> region))
     val newUri = config.uriHost.withPath(path).withQuery(query)
 
-    f(HttpRequest(uri = newUri, headers = headers))
+    config.f(HttpRequest(uri = newUri, headers = headers))
   }
 }

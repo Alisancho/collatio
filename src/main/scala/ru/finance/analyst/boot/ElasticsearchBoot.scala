@@ -1,8 +1,14 @@
 package ru.finance.analyst.boot
 
 import akka.stream.Materializer
-import akka.stream.alpakka.elasticsearch.{ApiVersion, ElasticsearchConnectionSettings, ElasticsearchParams, ElasticsearchSourceSettings, ElasticsearchWriteSettings, RetryAtFixedRate}
-import ru.finance.analyst.ropository.ElasticsearchRep
+import akka.stream.alpakka.elasticsearch.{
+  ApiVersion,
+  ElasticsearchConnectionSettings,
+  ElasticsearchParams,
+  ElasticsearchSourceSettings,
+  ElasticsearchWriteSettings,
+  RetryAtFixedRate
+}
 
 import scala.concurrent.duration._
 
@@ -10,16 +16,15 @@ trait ElasticsearchBoot {
   implicit val materializer: Materializer
 
   val connectionSettings: ElasticsearchConnectionSettings = ElasticsearchConnectionSettings("http://localhost:9200")
-  val elasticsearchParamsV7: ElasticsearchParams = ElasticsearchParams.V7("collatioindex")
-  val sinkSettings: ElasticsearchWriteSettings = ElasticsearchWriteSettings(connectionSettings)
-      .withBufferSize(10)
-      .withVersionType("internal")
-      .withRetryLogic(RetryAtFixedRate(maxRetries = 5, retryInterval = 1.second))
-      .withApiVersion(ApiVersion.V7)
+  val elasticsearchParamsV7: ElasticsearchParams          = ElasticsearchParams.V7("collatioindex")
+  val sinkSettings: ElasticsearchWriteSettings            = ElasticsearchWriteSettings(connectionSettings)
+    .withBufferSize(10)
+    .withVersionType("internal")
+    .withRetryLogic(RetryAtFixedRate(maxRetries = 5, retryInterval = 1.second))
+    .withApiVersion(ApiVersion.V7)
 
   val sourceSettings: ElasticsearchSourceSettings = ElasticsearchSourceSettings(connectionSettings)
-      .withBufferSize(10)
-      .withScrollDuration(5.minutes)
-    
-  val elasticsearchRep = new ElasticsearchRep(elasticsearchParamsV7, sinkSettings, sourceSettings)
+    .withBufferSize(10)
+    .withScrollDuration(5.minutes)
+
 }

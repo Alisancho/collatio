@@ -1,36 +1,22 @@
 package ru.finance.analyst.service
 
-import com.typesafe.config.ConfigObject
-import org.telegram.telegrambots.bots.DefaultBotOptions
-import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import com.telega.TelegramService
+import com.typesafe.scalalogging.LazyLogging
 import org.telegram.telegrambots.meta.api.objects.Update
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 
-import java.util.Objects
+case class TelegramServiceConfig(token: String, name: String, chat_id: Long)
 
-class TelegramServiceImpl(token: String, 
-                          name: String, 
-                          chat_id: Long)(buisnessTaskServiceImpl:BuisnessTaskServiceImpl) extends TelegramLongPollingBot {
+class TelegramServiceImpl(conf: TelegramServiceConfig)
+                         (buisnessTaskServiceImpl: BuisnessTaskServiceImpl)
+    extends TelegramService with LazyLogging {
+  logger.info("START_TelegramServiceImpl")
 
   override def onUpdateReceived(update: Update): Unit = {
-    if (update.getMessage != null && update.getMessage.hasText && update.getMessage.getChatId == chat_id) {
-    }
+    if (update.getMessage != null && update.getMessage.hasText && update.getMessage.getChatId == conf.chat_id) {}
   }
 
-  override def getBotUsername: String = name
+  override def getBotUsername: String = conf.name
 
-  override def getBotToken: String = token
+  override def getBotToken: String = conf.token
 
-//  def sendMessage(mess: String, chatId:Long  = chat_id): Unit = {
-//    val sendMessage = new SendMessage(chatId, mess)
-////    sendMessage.setReplyMarkup(replyKeyboardMarkup)
-//    try {
-//      execute(sendMessage)
-//    } catch {
-//      case ignored: Throwable =>
-//    }
-//  }
 }
