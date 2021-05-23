@@ -5,8 +5,6 @@ import akka.http.scaladsl.Http
 import ru.finance.analyst.service.{YahooFinanceConfig, YahooFinanceServiceImpl}
 import ru.finance.analyst.config.Config.YahooConfig
 
-import scala.concurrent.Future
-
 trait YahooBoot {
   val system: ActorSystem
 
