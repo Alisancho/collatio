@@ -44,6 +44,7 @@ libraryDependencies ++= Seq(
   ("com.typesafe.akka"  %% "akka-stream"                       % akkaVersion).cross(CrossVersion.for3Use2_13),
   ("com.typesafe.akka"  %% "akka-http"                         % akkaHttp).cross(CrossVersion.for3Use2_13),
   ("com.typesafe.akka"  %% "akka-http-spray-json"              % akkaHttp).cross(CrossVersion.for3Use2_13),
+  ("com.typesafe.akka"    %% "akka-slf4j"                      % akkaVersion).cross(CrossVersion.for3Use2_13),
   ("com.lightbend.akka" %% "akka-stream-alpakka-elasticsearch" % "3.0.0").cross(CrossVersion.for3Use2_13),
   ("org.telegram"        % "telegrambots"                      % "4.7"),
   ("org.typelevel")     %% "cats-effect"                       % "3.1.1"

@@ -36,25 +36,16 @@ class TelegramController(conf: TelegramControllerConfig)(
               .map(_.data.utf8String)
               .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
               .map(_.price.regularMarketPrice.raw)
-              .foreach(l => this.sendMessage(l.toString, update.getMessage.getChatId))
+              .foreach(l => this.sendMessage("S&P500 = " + l.toString, update.getMessage.getChatId))
           case "Узнать DJI"    =>
             yahooFinanceServiceImpl
-              .getInfo("^GSPC", "US", SUMMARY)
+              .getInfo("^DJI", "US", SUMMARY)
               .flatMap(_.entity.toStrict(3.second))
               .map(_.data.utf8String)
               .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
               .map(_.price.regularMarketPrice.raw)
-              .foreach(l => this.sendMessage
-              (l.toString, update.getMessage.getChatId))
-          case ""              =>
-            yahooFinanceServiceImpl
-              .getInfo("^GSPC", "US", SUMMARY)
-              .flatMap(_.entity.toStrict(3.second))
-              .map(_.data.utf8String)
-              .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
-              .map(_.price.regularMarketPrice.raw)
-              .foreach(l => this.sendMessage(l.toString, update.getMessage.getChatId))
-          case _               => this.sendMessage("ERROR", update.getMessage.getChatId)
+              .foreach(l => this.sendMessage("DJI = " +l.toString, update.getMessage.getChatId))
+          case _ => this.sendMessage("ERROR", update.getMessage.getChatId)
         }
       }
     }
