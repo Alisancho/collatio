@@ -10,28 +10,26 @@ import akka.stream.alpakka.elasticsearch.{
   WriteResult
 }
 import akka.stream.alpakka.elasticsearch.scaladsl.{ElasticsearchFlow, ElasticsearchSource}
-import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.scaladsl.Source
 import com.typesafe.scalalogging.LazyLogging
 import ru.finance.analyst.entity.elastic.MonitoringTask
-import spray.json.{JsonFormat, JsonReader, JsonWriter}
+import spray.json.{JsonReader, JsonWriter}
 
-import scala.concurrent.Future
+class MonitoringTaskRep(
+                         elasticsearchParams: ElasticsearchParams,
+                         elasticsearchWriteSettings: ElasticsearchWriteSettings,
+                         sourceSettings: ElasticsearchSourceSettings
+                       )(implicit materializer: Materializer) extends LazyLogging {
 
-class ElasticsearchRep(
-    elasticsearchParams: ElasticsearchParams,
-    elasticsearchWriteSettings: ElasticsearchWriteSettings,
-    sourceSettings: ElasticsearchSourceSettings
-)(implicit materializer: Materializer)
-    extends LazyLogging {
   logger.info("START_ElasticsearchRep")
-  def createIndexMessage[T](id: String, ko: T)(implicit f: JsonWriter[T]): Future[Seq[WriteResult[T, NotUsed]]] = {
+
+  def createIndexMessage[T](id: String, ko: T)(implicit f: JsonWriter[T]): Source[WriteResult[T, NotUsed], NotUsed] = {
     Source
       .single(ko)
       .map(m => WriteMessage.createIndexMessage(id = id, source = m))
       .via(
         ElasticsearchFlow.create[T](elasticsearchParams, elasticsearchWriteSettings)
       )
-      .runWith(Sink.seq)
   }
 
   def getMonitoringTask(implicit k: JsonReader[MonitoringTask]): Source[MonitoringTask, NotUsed] =
@@ -44,4 +42,5 @@ class ElasticsearchRep(
         sourceSettings
       )
       .map(_.source)
+
 }

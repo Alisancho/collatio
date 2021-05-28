@@ -14,7 +14,7 @@ object Config {
   object YahooConfig    {
     val uriHost: String       = "https://apidojo-yahoo-finance-v1.p.rapidapi.com"
     val xRapidapiHost: String = "apidojo-yahoo-finance-v1.p.rapidapi.com"
-    val token: String         = System.getenv.get("YAHOO_TOKEN")
+    val token: String         = System.getenv("YAHOO_TOKEN")
   }
 
   object ElasticConfig  {
@@ -23,8 +23,9 @@ object Config {
   }
 
   object TelegramConfig {
-    val mainChatID: Long = System.getenv.get("TELEGRAM_MAIN_ID").toLong
+    val mainChatID: Long = System.getenv("TELEGRAM_MAIN_ID").toLong
     val name: String     = "MonitoringInvestBot"
-    val token: String    = System.getenv.get("TELEGRAM_TOKEN")
+    val token: String    = System.getenv("TELEGRAM_TOKEN")
   }
 }
+

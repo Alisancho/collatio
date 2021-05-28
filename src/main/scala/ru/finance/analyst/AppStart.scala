@@ -1,23 +1,26 @@
 package ru.finance.analyst
 
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.Uri
 import com.typesafe.scalalogging.LazyLogging
+import org.telegram.telegrambots.ApiContextInitializer
+import org.telegram.telegrambots.meta.TelegramBotsApi
 import ru.finance.analyst.boot.{ContextBoot, ElasticsearchBoot}
+import ru.finance.analyst.config.Config
 import ru.finance.analyst.config.Config.{ServerConfig, TelegramConfig, YahooConfig}
 import ru.finance.analyst.controler.http.HttpController
-import ru.finance.analyst.jobs.MonitoringJob
-import ru.finance.analyst.ropository.ElasticsearchRep
-import ru.finance.analyst.service.{
-  BuisnessTaskServiceImpl,
-  TelegramServiceConfig,
-  TelegramServiceImpl,
-  YahooFinanceConfig,
-  YahooFinanceServiceImpl
-}
+import ru.finance.analyst.controler.telegram.{TelegramController, TelegramControllerConfig}
+import ru.finance.analyst.entity.yahoo.JsonSupportYahoo
+import ru.finance.analyst.ropository.{MonitoringTaskRep, YahooFinanceRep}
+import ru.finance.analyst.service.{BuisnessTaskServiceImpl, YahooFinanceConfig, YahooFinanceServiceImpl}
 
-import scala.util.{Failure, Success}
 
-object AppStart extends App with ContextBoot with ElasticsearchBoot with LazyLogging {
+object AppStart extends App
+  with ContextBoot
+  with ElasticsearchBoot
+  with LazyLogging
+  with JsonSupportYahoo {
+  ApiContextInitializer.init()
   import com.softwaremill.macwire._
 
   val yahooFinanceConfig: YahooFinanceConfig = YahooFinanceConfig(
@@ -27,38 +30,40 @@ object AppStart extends App with ContextBoot with ElasticsearchBoot with LazyLog
     r => Http()(system).singleRequest(r)
   )
 
-  val telegramServiceConfig: TelegramServiceConfig =
-    TelegramServiceConfig(
+  val telegramServiceConfig: TelegramControllerConfig =
+    TelegramControllerConfig(
       TelegramConfig.token,
       TelegramConfig.name,
       TelegramConfig.mainChatID
     )
 
-  val theElasticsearchRep        = wire[ElasticsearchRep]
+  val theMonitoringTaskRep       = wire[MonitoringTaskRep]
+  val theYahooFinanceRep         = wire[YahooFinanceRep]
   val theYahooFinanceServiceImpl = wire[YahooFinanceServiceImpl]
   val theBuisnessTaskServiceImpl = wire[BuisnessTaskServiceImpl]
-  val theTelegramServiceImpl     = wire[TelegramServiceImpl]
+  val theTelegramController      = wire[TelegramController]
 
-  MonitoringJob
-    .startMonitoringJob(theElasticsearchRep, theYahooFinanceServiceImpl)
-    .runForeach(_ => ())
-    .onComplete({
-      case Success(value)     => logger.info("STOP_JOB")
-      case Failure(exception) => logger.error(exception.getLocalizedMessage)
-    })
+//  val theTelegramController = new com.telega.TelegramService(TelegramConfig.name,TelegramConfig.token)
+
+
+  val telegramBotsApi =  new TelegramBotsApi()
+  telegramBotsApi.registerBot(theTelegramController)
+
+//  MonitoringJob
+//    .startMonitoringJob(theMonitoringTaskRep, theYahooFinanceServiceImpl)
+//    .runForeach(_ => ())
+//    .onComplete({
+//      case Success(value)     => logger.info("STOP_JOB")
+//      case Failure(exception) => logger.error(exception.getLocalizedMessage)
+//    })
   logger.info("START_SERVER")
 
   val controller: HttpController = new HttpController(theYahooFinanceServiceImpl)
-//
-  Http()(system)
+
+  Http()
     .newServerAt(ServerConfig.host, ServerConfig.port)
-    .bindFlow(controller.getRout())
+    .bindFlow(controller.getRout)
 
-//  val id      = UUID.randomUUID().toString
-//  val task_id = "8-" + UUID.randomUUID().toString.replaceAll("-", "").substring(23)
-//  println(task_id)
-//  val jjj     = MonitoringTask(task_id, TelegramConfig.mainChatID, "ACTIVE", "^GSPC", "US", 3800, priceUp = false)
-
-//  MonitoringJob.startMonitoringJob(theElasticsearchRep, theYahooFinanceServiceImpl).runForeach(_ => ())
+  theTelegramController.sendMessage("START_SERVER",Config.TelegramConfig.mainChatID)
 
 }

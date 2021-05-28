@@ -8,20 +8,31 @@ import ru.finance.analyst.entity.yahoo.statistic.{
   SummaryDetail,
   YahooStatisticsResponse
 }
-import ru.finance.analyst.entity.yahoo.summary.{FinancialsTemplateSummary, PriceSummary, YahooSummaryResponse}
+import ru.finance.analyst.entity.yahoo.summary.{
+  AverageDailyVolume3Month,
+  PriceSummary,
+  RegularMarketOpen,
+  YahooSummaryResponse
+}
 
 trait JsonSupportYahoo {
 
   import spray.json._
   import DefaultJsonProtocol._
 
-  implicit val sharesOutstandingJ: RootJsonFormat[SharesOutstanding]             = jsonFormat2(SharesOutstanding)
-  implicit val summaryDetailJ: RootJsonFormat[SummaryDetail]                     = jsonFormat1(SummaryDetail)
-  implicit val defaultKeyStatisticsJ: RootJsonFormat[DefaultKeyStatistics]       = jsonFormat5(DefaultKeyStatistics)
-  implicit val yahooStatisticsResponseJ: RootJsonFormat[YahooStatisticsResponse] = jsonFormat3(YahooStatisticsResponse)
-  implicit val quoteTypeJ: RootJsonFormat[QuoteType]                             = jsonFormat11(QuoteType)
-  implicit val yahooSummaryResponseJ: RootJsonFormat[YahooSummaryResponse]       = jsonFormat2(YahooSummaryResponse)
-  implicit val monitoringTaskJ: JsonFormat[MonitoringTask]                       = jsonFormat7(MonitoringTask)
-  implicit val financialsTemplateSummaryJ: JsonFormat[FinancialsTemplateSummary] = jsonFormat2(FinancialsTemplateSummary)
-  implicit val priceJ: RootJsonFormat[PriceSummary]                              = jsonFormat1(PriceSummary)
+  implicit lazy val sharesOutstandingJ: RootJsonFormat[SharesOutstanding]             = jsonFormat2(SharesOutstanding.apply)
+  implicit lazy val summaryDetailJ: RootJsonFormat[SummaryDetail]                     = jsonFormat1(SummaryDetail.apply)
+  implicit lazy val defaultKeyStatisticsJ: RootJsonFormat[DefaultKeyStatistics]       = jsonFormat5(DefaultKeyStatistics.apply)
+  implicit lazy val yahooStatisticsResponseJ: RootJsonFormat[YahooStatisticsResponse] = jsonFormat3(
+    YahooStatisticsResponse.apply
+  )
+  implicit lazy val quoteTypeJ: RootJsonFormat[QuoteType]                             = jsonFormat11(QuoteType.apply)
+  implicit lazy val yahooSummaryResponseJ: RootJsonFormat[YahooSummaryResponse]       = jsonFormat2(YahooSummaryResponse.apply)
+  implicit lazy val monitoringTaskJ: JsonFormat[MonitoringTask]                       = jsonFormat7(MonitoringTask.apply)
+  implicit lazy val priceJ: RootJsonFormat[PriceSummary]                              = jsonFormat1(PriceSummary.apply)
+  implicit lazy val regularMarketOpenJ: JsonFormat[RegularMarketOpen]                 = jsonFormat2(RegularMarketOpen.apply)
+  implicit lazy val averageDailyVolume3MonthJ: JsonFormat[AverageDailyVolume3Month]   = jsonFormat3(
+    AverageDailyVolume3Month.apply
+  )
+
 }

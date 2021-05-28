@@ -8,7 +8,7 @@ lazy val logBackVersion = "1.2.3"
 
 name := "collatio"
 version := "0.1.0"
-
+scalacOptions += "-feature"
 scalaVersion := dottyVersion
 
 scalacOptions += "-target:jvm-1.8"
@@ -45,7 +45,8 @@ libraryDependencies ++= Seq(
   ("com.typesafe.akka"  %% "akka-http"                         % akkaHttp).cross(CrossVersion.for3Use2_13),
   ("com.typesafe.akka"  %% "akka-http-spray-json"              % akkaHttp).cross(CrossVersion.for3Use2_13),
   ("com.lightbend.akka" %% "akka-stream-alpakka-elasticsearch" % "3.0.0").cross(CrossVersion.for3Use2_13),
-  ("org.telegram"        % "telegrambots"                      % "4.7")
+  ("org.telegram"        % "telegrambots"                      % "4.7"),
+  ("org.typelevel")     %% "cats-effect"                       % "3.1.1"
 )
 libraryDependencies ++= Seq(
   "com.softwaremill.macwire"   %% "macrosakka"               % softwaremill % "provided",

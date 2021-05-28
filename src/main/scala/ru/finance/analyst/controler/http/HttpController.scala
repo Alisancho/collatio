@@ -1,13 +1,10 @@
 package ru.finance.analyst.controler.http
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl._
-import akka.util.ByteString
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest}
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
+import akka.stream.scaladsl.Flow
 import ru.finance.analyst.service.YahooFinanceServiceImpl
 import ru.finance.analyst.entity.yahoo.statistic.YahooStatisticsResponse
 import ru.finance.analyst.entity.yahoo.summary.YahooSummaryResponse
@@ -22,14 +19,15 @@ import ru.finance.analyst.service.YahooFinanceService._
 
 class HttpController(yahooFinanceServiceImpl: YahooFinanceServiceImpl)
                     (implicit ex:ExecutionContextExecutor, materializer: Materializer) extends JsonSupportYahoo {
-  def getRout(): Route = pathPrefix("api" / "v1") {
+
+  def getRout: Route = pathPrefix("api" / "v1") {
     path("statistics") {
       get {
         entity(as[HttpRequest]) { httpRequest =>
           complete(
             yahooFinanceServiceImpl
               .getInfo("AAPL", "US", STATISTIC)
-              .flatMap(_.entity.toStrict(5.second))
+              .flatMap(_.entity.toStrict(3.second))
               .map(_.data.utf8String)
               .map(JsonParser(_).convertTo[YahooStatisticsResponse])
               .map(_.toJson.toString)
@@ -43,9 +41,9 @@ class HttpController(yahooFinanceServiceImpl: YahooFinanceServiceImpl)
             complete(
               yahooFinanceServiceImpl
                 .getInfo("^GSPC", "US", SUMMARY)
-                .flatMap(_.entity.toStrict(5.second))
+                .flatMap(_.entity.toStrict(3.second))
                 .map(_.data.utf8String)
-                .map(JsonParser(_).convertTo[YahooSummaryResponse])
+                .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
                 .map(_.toJson.toString)
             )
           }

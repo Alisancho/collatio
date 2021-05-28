@@ -1,16 +1,26 @@
 package ru.finance.analyst.entity.yahoo.summary
 
 case class YahooSummaryResponse(
-    price: PriceSummary,
-    symbol: String
-)
+                                 symbol: String,
+                                 price: PriceSummary,
+                               )
+
+case class AverageDailyVolume3Month(
+                                     raw: Int,
+                                     fmt: String,
+                                     longFmt: String
+                                   )
 
 case class PriceSummary(
-    regularMarketPrice: FinancialsTemplateSummary
-//      quoteSourceName:String
-)
+//                         quoteSourceName: String,
+//                         currency: String,
+                         regularMarketPrice: RegularMarketOpen,
+//                         regularMarketVolume: AverageDailyVolume3Month,
+                       )
 
-case class FinancialsTemplateSummary(
-    fmt: String,
-    raw: Double
-)
+
+case class RegularMarketOpen(
+                              raw: Float,
+                              fmt: String
+                            )
+

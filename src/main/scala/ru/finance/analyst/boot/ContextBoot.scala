@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContextExecutor
 
 trait ContextBoot {
 
-  val system: ActorSystem = ActorSystem("mainActorSystem", Config.config)
+  implicit val system: ActorSystem = ActorSystem("mainActorSystem", Config.config)
 
   implicit val materializer: Materializer = Materializer(system)
 
