@@ -13,12 +13,9 @@ import ru.finance.analyst.entity.yahoo.JsonSupportYahoo
 import ru.finance.analyst.ropository.MonitoringTaskRep.ALL_ACTIVE_TASK_CHAT_ID
 import ru.finance.analyst.ropository.{MonitoringTaskRep, YahooFinanceRep}
 import ru.finance.analyst.service.{BuisnessTaskServiceImpl, YahooFinanceConfig, YahooFinanceServiceImpl}
+import ru.finance.analyst.telegram.keyboard.KeyBoards.MAIN_KEY_BOARD
 
-object AppStart extends App
-  with ContextBoot
-  with ElasticsearchBoot
-  with LazyLogging
-  with JsonSupportYahoo {
+object AppStart extends App with ContextBoot with ElasticsearchBoot with LazyLogging with JsonSupportYahoo {
   ApiContextInitializer.init()
   import com.softwaremill.macwire._
 
@@ -42,8 +39,7 @@ object AppStart extends App
   val theBuisnessTaskServiceImpl = wire[BuisnessTaskServiceImpl]
   val theTelegramController      = wire[TelegramController]
 
-
-  val telegramBotsApi =  new TelegramBotsApi()
+  val telegramBotsApi = new TelegramBotsApi()
   telegramBotsApi.registerBot(theTelegramController)
 
 //  MonitoringJob
@@ -61,14 +57,12 @@ object AppStart extends App
     .newServerAt(ServerConfig.host, ServerConfig.port)
     .bindFlow(controller.getRout)
 
-  theTelegramController.sendMessage("START_SERVER",Config.TelegramConfig.mainChatID)
-
+  theTelegramController.sendMessage("START_SERVER", Config.TelegramConfig.mainChatID,MAIN_KEY_BOARD)
 
   theMonitoringTaskRep
     .getOnlyActiveTask(ALL_ACTIVE_TASK_CHAT_ID(61226443))
     .runForeach(m => logger.info(m.toString))
     .failed
     .foreach(error => logger.error(error.getMessage))
-
 
 }
