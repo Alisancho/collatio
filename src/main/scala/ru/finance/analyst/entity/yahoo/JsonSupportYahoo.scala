@@ -1,19 +1,8 @@
 package ru.finance.analyst.entity.yahoo
 
 import ru.finance.analyst.entity.elastic.MonitoringTask
-import ru.finance.analyst.entity.yahoo.statistic.{
-  DefaultKeyStatistics,
-  QuoteType,
-  SharesOutstanding,
-  SummaryDetail,
-  YahooStatisticsResponse
-}
-import ru.finance.analyst.entity.yahoo.summary.{
-  AverageDailyVolume3Month,
-  PriceSummary,
-  RegularMarketOpen,
-  YahooSummaryResponse
-}
+import ru.finance.analyst.entity.yahoo.statistic.{DefaultKeyStatistics, QuoteType, SharesOutstanding, SummaryDetail, YahooStatisticsResponse}
+import ru.finance.analyst.entity.yahoo.summary.{AverageDailyVolume3Month, PriceSummary, RegularMarketOpen, YahooSummaryResponse, YahooSummaryResponseQuoteType}
 
 trait JsonSupportYahoo {
 
@@ -27,12 +16,14 @@ trait JsonSupportYahoo {
     YahooStatisticsResponse.apply
   )
   implicit lazy val quoteTypeJ: RootJsonFormat[QuoteType]                             = jsonFormat11(QuoteType.apply)
-  implicit lazy val yahooSummaryResponseJ: RootJsonFormat[YahooSummaryResponse]       = jsonFormat2(YahooSummaryResponse.apply)
+  implicit lazy val yahooSummaryResponseJ: RootJsonFormat[YahooSummaryResponse]       = jsonFormat3(YahooSummaryResponse.apply)
   implicit lazy val monitoringTaskJ: JsonFormat[MonitoringTask]                       = jsonFormat7(MonitoringTask.apply)
   implicit lazy val priceJ: RootJsonFormat[PriceSummary]                              = jsonFormat1(PriceSummary.apply)
   implicit lazy val regularMarketOpenJ: JsonFormat[RegularMarketOpen]                 = jsonFormat2(RegularMarketOpen.apply)
   implicit lazy val averageDailyVolume3MonthJ: JsonFormat[AverageDailyVolume3Month]   = jsonFormat3(
     AverageDailyVolume3Month.apply
   )
+  implicit lazy val yahooSummaryResponseQuoteType: RootJsonFormat[YahooSummaryResponseQuoteType]= jsonFormat9(YahooSummaryResponseQuoteType.apply)
+
 
 }

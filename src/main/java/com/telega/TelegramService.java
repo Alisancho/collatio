@@ -16,18 +16,13 @@ public abstract class TelegramService extends TelegramLongPollingBot {
     public TelegramService() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         KeyboardRow k1 = new KeyboardRow();
-        KeyboardRow k2 = new KeyboardRow();
-        KeyboardRow k3 = new KeyboardRow();
         k1.add(new KeyboardButton("Узнать S&P500"));
-        k2.add(new KeyboardButton("Узнать DJI"));
-        k3.add(new KeyboardButton("Мои задачи"));
+        k1.add(new KeyboardButton("Узнать DJI"));
+        k1.add(new KeyboardButton("Мои задачи"));
         List<KeyboardRow> list = new ArrayList<KeyboardRow>();
         list.add(k1);
-        list.add(k2);
-        list.add(k3);
         replyKeyboardMarkup.setKeyboard(list);
         this.replyKeyboardMarkup = replyKeyboardMarkup;
-
     }
 
     public void sendMessage(final String mess, final Long chatId) {

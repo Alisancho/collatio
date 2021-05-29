@@ -1,7 +1,6 @@
 package ru.finance.analyst
 
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.Uri
 import com.typesafe.scalalogging.LazyLogging
 import org.telegram.telegrambots.ApiContextInitializer
 import org.telegram.telegrambots.meta.TelegramBotsApi
@@ -11,9 +10,9 @@ import ru.finance.analyst.config.Config.{ServerConfig, TelegramConfig, YahooConf
 import ru.finance.analyst.controler.http.HttpController
 import ru.finance.analyst.controler.telegram.{TelegramController, TelegramControllerConfig}
 import ru.finance.analyst.entity.yahoo.JsonSupportYahoo
+import ru.finance.analyst.ropository.MonitoringTaskRep.ALL_ACTIVE_TASK_CHAT_ID
 import ru.finance.analyst.ropository.{MonitoringTaskRep, YahooFinanceRep}
 import ru.finance.analyst.service.{BuisnessTaskServiceImpl, YahooFinanceConfig, YahooFinanceServiceImpl}
-
 
 object AppStart extends App
   with ContextBoot
@@ -43,8 +42,6 @@ object AppStart extends App
   val theBuisnessTaskServiceImpl = wire[BuisnessTaskServiceImpl]
   val theTelegramController      = wire[TelegramController]
 
-//  val theTelegramController = new com.telega.TelegramService(TelegramConfig.name,TelegramConfig.token)
-
 
   val telegramBotsApi =  new TelegramBotsApi()
   telegramBotsApi.registerBot(theTelegramController)
@@ -65,5 +62,13 @@ object AppStart extends App
     .bindFlow(controller.getRout)
 
   theTelegramController.sendMessage("START_SERVER",Config.TelegramConfig.mainChatID)
+
+
+  theMonitoringTaskRep
+    .getOnlyActiveTask(ALL_ACTIVE_TASK_CHAT_ID(61226443))
+    .runForeach(m => logger.info(m.toString))
+    .failed
+    .foreach(error => logger.error(error.getMessage))
+
 
 }

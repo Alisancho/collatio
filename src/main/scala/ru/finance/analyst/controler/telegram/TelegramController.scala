@@ -16,6 +16,7 @@ import scala.concurrent.duration.DurationInt
 
 case class TelegramControllerConfig(token: String, name: String, chat_id: Long)
 
+
 class TelegramController(conf: TelegramControllerConfig)(
     buisnessTaskServiceImpl: BuisnessTaskServiceImpl,
     yahooFinanceServiceImpl: YahooFinanceServiceImpl
@@ -29,22 +30,9 @@ class TelegramController(conf: TelegramControllerConfig)(
       if (update.getMessage != null && update.getMessage.hasText) {
         val text = update.getMessage.getText
         text match {
-          case "Узнать S&P500" =>
-            yahooFinanceServiceImpl
-              .getInfo("^GSPC", "US", SUMMARY)
-              .flatMap(_.entity.toStrict(3.second))
-              .map(_.data.utf8String)
-              .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
-              .map(_.price.regularMarketPrice.raw)
-              .foreach(l => this.sendMessage("S&P500 = " + l.toString, update.getMessage.getChatId))
-          case "Узнать DJI"    =>
-            yahooFinanceServiceImpl
-              .getInfo("^DJI", "US", SUMMARY)
-              .flatMap(_.entity.toStrict(3.second))
-              .map(_.data.utf8String)
-              .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
-              .map(_.price.regularMarketPrice.raw)
-              .foreach(l => this.sendMessage("DJI = " +l.toString, update.getMessage.getChatId))
+          case "Узнать S&P500" => searchIndexInYahoo("^GSPC","S&P500 = ",update)
+          case "Узнать DJI"    => searchIndexInYahoo("^DJI","DJI = ",update)
+          case "Узнать VIX"    => searchIndexInYahoo("^VIX","VIX = ",update)
           case _ => this.sendMessage("ERROR", update.getMessage.getChatId)
         }
       }
@@ -53,5 +41,14 @@ class TelegramController(conf: TelegramControllerConfig)(
   override def getBotUsername: String = conf.name
 
   override def getBotToken: String = conf.token
+
+  val searchIndexInYahoo:(String, String, Update) => Unit = (tiker,mess,update) =>
+    yahooFinanceServiceImpl
+      .getInfo(tiker, "US", SUMMARY)
+      .flatMap(_.entity.toStrict(3.second))
+      .map(_.data.utf8String)
+      .map(g => JsonParser(g).convertTo[YahooSummaryResponse])
+      .map(_.price.regularMarketPrice.raw)
+      .foreach(l => this.sendMessage(mess + l, update.getMessage.getChatId))
 
 }
