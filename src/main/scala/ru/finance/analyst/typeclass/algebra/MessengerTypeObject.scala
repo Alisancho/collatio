@@ -1,16 +1,17 @@
 package ru.finance.analyst.typeclass.algebra
 
 import ru.finance.analyst.entity.elastic.MonitoringTask
-import ru.finance.analyst.entity.yahoo.summary.YahooSummaryResponse
+
 import ru.finance.analyst.typeclass.MessengerType
+import yahoofinance.Stock
 
 object MessengerTypeObject {
-  implicit class MessengerTypeYahooSummaryResponse(yahooSummaryResponse:YahooSummaryResponse)
-    extends MessengerType[YahooSummaryResponse]{
+  implicit class MessengerTypeYahooStock(stock:Stock)
+    extends MessengerType[Stock]{
      override def getTelegramMessenger: String =
        s"""
-         |ShortName: ${yahooSummaryResponse.quoteType.shortName}
-         |Price: ${yahooSummaryResponse.price.regularMarketPrice.fmt}
+         |ShortName: ${stock.getName}
+         |Price: ${stock.getQuote.getPrice.toString}
          |""".stripMargin
    }
   implicit class MessengerTypeMonitoringTask(monitoringTask:MonitoringTask)

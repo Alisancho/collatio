@@ -1,20 +1,9 @@
 package ru.finance.analyst.jobs
 
-import akka.actor.Cancellable
-import akka.stream.Materializer
-import akka.stream.scaladsl.Source
+
 import com.typesafe.scalalogging.LazyLogging
-import ru.finance.analyst.entity.yahoo.JsonSupportYahoo
-import ru.finance.analyst.entity.yahoo.summary.YahooSummaryResponse
-import ru.finance.analyst.ropository.MonitoringTaskRep
-import ru.finance.analyst.service.YahooFinanceService.SUMMARY
-import ru.finance.analyst.service.YahooFinanceServiceImpl
-import spray.json.JsonParser
 
-import scala.concurrent.ExecutionContextExecutor
-import scala.concurrent.duration._
-
-object MonitoringJob extends JsonSupportYahoo with LazyLogging{
+object MonitoringJob extends LazyLogging{
 //  def startMonitoringJob(elasticsearchRep: MonitoringTaskRep, yahooFinanceService:YahooFinanceServiceImpl)
 //                        (implicit materializer: Materializer, ex: ExecutionContextExecutor): Source[Unit, Cancellable] ={
 //    Source.tick(4.second,10.second,"")

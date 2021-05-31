@@ -16,22 +16,29 @@ object KeyBoards {
     replyKeyboardMarkup
   }
 
-   object KeyBoardRow {
-    val KEY_BOARD_CURRENT_ROW: KeyboardRow = {
-      val keyboardRow: KeyboardRow = new KeyboardRow
-      keyboardRow.add(new KeyboardButton("Узнать S&P500"))
-      keyboardRow.add(new KeyboardButton("Узнать DJI"))
-      keyboardRow.add(new KeyboardButton("Узнать VIX"))
-      keyboardRow
-    }
-    val KEY_BOARD_TASK_ROW: KeyboardRow    = {
-      val keyboardRow: KeyboardRow = new KeyboardRow
-      keyboardRow.add(new KeyboardButton("CREATE_TASK"))
-      keyboardRow.add(new KeyboardButton("DELL_TASK"))
-      keyboardRow.add(new KeyboardButton("MY_TASKS"))
-      keyboardRow
-    }
+  val TASK_L:ReplyKeyboardMarkup= {
+    val replyKeyboardMarkup          = new ReplyKeyboardMarkup
+    val list: util.List[KeyboardRow] = new util.ArrayList[KeyboardRow]
+    replyKeyboardMarkup.setKeyboard(list)
+    replyKeyboardMarkup
   }
+
+   object KeyBoardRow {
+     val KEY_BOARD_CURRENT_ROW: KeyboardRow = {
+       val keyboardRow: KeyboardRow = new KeyboardRow
+       keyboardRow.add(new KeyboardButton("Узнать S&P500"))
+       keyboardRow.add(new KeyboardButton("Узнать DJI"))
+       keyboardRow.add(new KeyboardButton("Узнать VIX"))
+       keyboardRow
+     }
+     val KEY_BOARD_TASK_ROW: KeyboardRow    = {
+       val keyboardRow: KeyboardRow = new KeyboardRow
+       keyboardRow.add(new KeyboardButton("CREATE_TASK"))
+       keyboardRow.add(new KeyboardButton("DELL_TASK"))
+       keyboardRow.add(new KeyboardButton("MY_TASKS"))
+       keyboardRow
+     }
+   }
 
 
 }
