@@ -1,11 +1,12 @@
 package ru.finance.analyst.telegram.keyboard
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.{KeyboardButton, KeyboardRow}
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.{InlineKeyboardButton, KeyboardButton, KeyboardRow}
 import ru.finance.analyst.telegram.keyboard.KeyBoards.KeyBoardRow.{KEY_BOARD_CURRENT_ROW, KEY_BOARD_TASK_ROW}
 
 import java.util
-
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 object KeyBoards {
   val MAIN_KEY_BOARD: ReplyKeyboardMarkup = {
     val replyKeyboardMarkup          = new ReplyKeyboardMarkup
@@ -40,5 +41,18 @@ object KeyBoards {
      }
    }
 
-
+  object MonitoringTask{
+    val BUTTON_DELL_TASK:InlineKeyboardMarkup = {
+      val inlineKeyboardMarkup = new InlineKeyboardMarkup()
+      val keyboardButtonsRow1: util.List[InlineKeyboardButton] = new util.ArrayList[InlineKeyboardButton]
+      val inlineKeyboardButton1 = new InlineKeyboardButton
+      inlineKeyboardButton1.setText("DELL")
+      inlineKeyboardButton1.setCallbackData("DELETE_TASK")
+      keyboardButtonsRow1.add(inlineKeyboardButton1)
+      val rowList: util.List[util.List[InlineKeyboardButton]] = new util.ArrayList
+      rowList.add(keyboardButtonsRow1)
+      inlineKeyboardMarkup.setKeyboard(rowList)
+      inlineKeyboardMarkup
+    }
+  }
 }

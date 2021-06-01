@@ -18,11 +18,11 @@ object MessengerTypeObject {
     extends MessengerType[MonitoringTask]{
     override def getTelegramMessenger: String =
       s"""
-         |Task id: ${monitoringTask.taskId}
+         |Name : ${monitoringTask.name}
          |Yahoo symbol: ${monitoringTask.yahooSymbol}
-         |Yahoo region: ${monitoringTask.yahooRegion}
          |Price limit: ${monitoringTask.priceLimit}
          |Price up: ${monitoringTask.priceUp}
+         |Task id: ${monitoringTask.taskId}
          |""".stripMargin
   }
 }

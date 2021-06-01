@@ -6,7 +6,8 @@ import yahoofinance.YahooFinance
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class YahooFinanceServiceFutureImpl(implicit ex:ExecutionContextExecutor) extends LazyLogging with YahooFinanceService[Future] {
+class YahooFinanceServiceFutureImpl(implicit ex: ExecutionContextExecutor)
+    extends LazyLogging with YahooFinanceService[Future] {
   logger.info("START_YahooFinanceServiceImpl")
 
   override def getStock(ticker: String): Future[Stock] =
