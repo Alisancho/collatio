@@ -12,8 +12,7 @@ object Config {
   }
 
   object ElasticConfig  {
-    val host: String = config.getString("elastic.host")
-    val port: Int    = config.getInt("elastic.port")
+    val host: String = System.getenv("ELASTIC_HOST")
   }
 
   object TelegramConfig {

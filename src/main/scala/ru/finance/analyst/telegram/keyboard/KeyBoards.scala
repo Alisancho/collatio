@@ -7,6 +7,7 @@ import ru.finance.analyst.telegram.keyboard.KeyBoards.KeyBoardRow.{KEY_BOARD_CUR
 import java.util
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
+
 object KeyBoards {
   val MAIN_KEY_BOARD: ReplyKeyboardMarkup = {
     val replyKeyboardMarkup          = new ReplyKeyboardMarkup

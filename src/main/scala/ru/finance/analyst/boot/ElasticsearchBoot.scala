@@ -1,21 +1,15 @@
 package ru.finance.analyst.boot
 
 import akka.stream.Materializer
-import akka.stream.alpakka.elasticsearch.{
-  ApiVersion,
-  ElasticsearchConnectionSettings,
-  ElasticsearchParams,
-  ElasticsearchSourceSettings,
-  ElasticsearchWriteSettings,
-  RetryAtFixedRate
-}
+import akka.stream.alpakka.elasticsearch.{ApiVersion, ElasticsearchConnectionSettings, ElasticsearchParams, ElasticsearchSourceSettings, ElasticsearchWriteSettings, RetryAtFixedRate}
+import ru.finance.analyst.config.Config.ElasticConfig.host
 
 import scala.concurrent.duration._
 
 trait ElasticsearchBoot {
   implicit val materializer: Materializer
 
-  val connectionSettings: ElasticsearchConnectionSettings = ElasticsearchConnectionSettings("http://localhost:9200")
+  val connectionSettings: ElasticsearchConnectionSettings = ElasticsearchConnectionSettings(host)
   val elasticsearchParamsV7: ElasticsearchParams          = ElasticsearchParams.V7("collatioindex")
   val sinkSettings: ElasticsearchWriteSettings            = ElasticsearchWriteSettings(connectionSettings)
     .withBufferSize(10)
