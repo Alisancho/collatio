@@ -5,6 +5,7 @@ import com.telega.TelegramService
 import com.typesafe.scalalogging.LazyLogging
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
+import ru.finance.analyst.controler.telegram.TelegramController.regexDell
 import ru.finance.analyst.service.{BuisnessTaskServiceImpl, YahooFinanceServiceFutureImpl}
 import ru.finance.analyst.telegram.keyboard.KeyBoards.MAIN_KEY_BOARD
 import ru.finance.analyst.typeclass.algebra.MessengerTypeObject.{MessengerTypeMonitoringTask, MessengerTypeYahooStock}
@@ -12,12 +13,20 @@ import ru.finance.analyst.entity.elastic.JsonHelper._
 import ru.finance.analyst.telegram.keyboard.KeyBoards.MonitoringTask.BUTTON_DELL_TASK
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
-
+import scala.util.{Failure, Success}
+import scala.util.matching.Regex
 
 case class TelegramControllerConfig(token: String, name: String, chat_id: Long)
 
-class TelegramController(conf: TelegramControllerConfig)(yahooFinanceService: YahooFinanceServiceFutureImpl,
-                                                         buisnessTaskService:BuisnessTaskServiceImpl)(implicit
+object TelegramController                      {
+//  val regexDell: Regex = "^DELL:[\\w\\S]*".r
+  val regexDell: Regex = "^DELETE:".r
+}
+
+class TelegramController(conf: TelegramControllerConfig)(
+    yahooFinanceService: YahooFinanceServiceFutureImpl,
+    buisnessTaskService: BuisnessTaskServiceImpl
+)(implicit
     ex: ExecutionContextExecutor,
     materializer: Materializer
 ) extends TelegramService() with LazyLogging {
@@ -37,14 +46,25 @@ class TelegramController(conf: TelegramControllerConfig)(yahooFinanceService: Ya
           case "MY_TASKS"      => {
             buisnessTaskService
               .getMyActiveTask(update.getMessage.getChatId)
-              .foreach(_.foreach(l => this.sendMessage(l.getTelegramMessenger, update.getMessage.getChatId, BUTTON_DELL_TASK)))
+              .foreach(
+                _.foreach(l =>
+                  this.sendMessage(l.getTelegramMessenger, update.getMessage.getChatId, BUTTON_DELL_TASK(l.taskId))
+                )
+              )
           }
           case _               => this.sendMessage("ERROR", update.getMessage.getChatId, MAIN_KEY_BOARD)
 
         }
       }
-    } else if (update.hasCallbackQuery) {
-      logger.info(update.getCallbackQuery.toString)
+    } else if (update.hasCallbackQuery && update.getCallbackQuery.getData != "") {
+      val mess:String    = update.getCallbackQuery.getData
+      val o = regexDell.pattern.matcher(mess).replaceFirst("")
+      val task = update.getCallbackQuery.getData
+      val chatId = update.getCallbackQuery.getMessage.getChatId
+      buisnessTaskService.deleteMyTask(chatId,task).onComplete{
+        case Success(value) => this.sendMessage("OK", update.getCallbackQuery.getMessage.getChatId)
+        case Failure(exception) => this.sendMessage(exception.getMessage, update.getCallbackQuery.getMessage.getChatId)
+      }
     }
 
   }

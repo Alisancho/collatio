@@ -18,7 +18,7 @@ object KeyBoards {
     replyKeyboardMarkup
   }
 
-  val TASK_L:ReplyKeyboardMarkup= {
+  val TASK_L:ReplyKeyboardMarkup = {
     val replyKeyboardMarkup          = new ReplyKeyboardMarkup
     val list: util.List[KeyboardRow] = new util.ArrayList[KeyboardRow]
     replyKeyboardMarkup.setKeyboard(list)
@@ -43,12 +43,12 @@ object KeyBoards {
    }
 
   object MonitoringTask{
-    val BUTTON_DELL_TASK:InlineKeyboardMarkup = {
+    val BUTTON_DELL_TASK:String => InlineKeyboardMarkup = taskId => {
       val inlineKeyboardMarkup = new InlineKeyboardMarkup()
       val keyboardButtonsRow1: util.List[InlineKeyboardButton] = new util.ArrayList[InlineKeyboardButton]
       val inlineKeyboardButton1 = new InlineKeyboardButton
-      inlineKeyboardButton1.setText("DELL")
-      inlineKeyboardButton1.setCallbackData("DELETE_TASK")
+      inlineKeyboardButton1.setText("DELETE")
+      inlineKeyboardButton1.setCallbackData(s"DELETE:$taskId")
       keyboardButtonsRow1.add(inlineKeyboardButton1)
       val rowList: util.List[util.List[InlineKeyboardButton]] = new util.ArrayList
       rowList.add(keyboardButtonsRow1)
